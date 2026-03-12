@@ -1,10 +1,11 @@
 import React from 'react';
+import type { Word } from '../services/wordService';
 
 type WordListProps = {
-  words: string[];
-  onDelete: (index: number) => void;
-  onEdit: (index: number) => void;
-  editingIndex: number | null;
+  words: Word[];
+  onDelete: (id: number) => void;
+  onEdit: (id: number, currentWord: string) => void;
+  editingId: number | null;
   editValue: string;
   setEditValue: (val: string) => void;
   saveEdit: () => void;
@@ -14,19 +15,19 @@ const WordList: React.FC<WordListProps> = ({
   words,
   onDelete,
   onEdit,
-  editingIndex,
+  editingId,
   editValue,
   setEditValue,
   saveEdit,
 }) => {
   return (
     <ul className="space-y-2">
-      {words.map((word, i) => (
+      {words.map((item) => (
         <li
-          key={i}
+          key={item.id}
           className="flex items-center justify-between bg-gray-100 rounded px-3 py-2 shadow-sm"
         >
-          {editingIndex === i ? (
+          {editingId === item.id ? (
             <>
               <input
                 className="flex-1 border border-blue-400 rounded px-2 py-1 mr-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -45,7 +46,7 @@ const WordList: React.FC<WordListProps> = ({
                 className="bg-gray-400 hover:bg-gray-500 text-white px-2 py-1 rounded"
                 onClick={() => {
                   setEditValue('');
-                  onEdit(-1);
+                  onEdit(-1, '');
                 }}
               >
                 Cancel
@@ -53,16 +54,16 @@ const WordList: React.FC<WordListProps> = ({
             </>
           ) : (
             <>
-              <span className="flex-1 text-gray-800">{word}</span>
+              <span className="flex-1 text-gray-800">{item.word}</span>
               <button
                 className="bg-yellow-400 hover:bg-yellow-500 text-white px-2 py-1 rounded mr-2"
-                onClick={() => onEdit(i)}
+                onClick={() => onEdit(item.id, item.word)}
               >
                 Edit
               </button>
               <button
                 className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded"
-                onClick={() => onDelete(i)}
+                onClick={() => onDelete(item.id)}
               >
                 Delete
               </button>
